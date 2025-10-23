@@ -1,0 +1,34 @@
+{
+  "results": [
+    {
+      "vertices": 6,
+      "edges": 8,
+      "same_total_cost": true,
+      "kruskal_time_ms": 0.0597,
+      "prim_time_ms": 0.0594,
+      "kruskal_operations": 32,
+      "prim_operations": 9,
+      "total_cost": 47
+    },
+    {
+      "vertices": 12,
+      "edges": 25,
+      "same_total_cost": true,
+      "kruskal_time_ms": 0.1058,
+      "prim_time_ms": 0.1989,
+      "kruskal_operations": 114,
+      "prim_operations": 26,
+      "total_cost": 159
+    },
+    {
+      "vertices": 25,
+      "edges": 60,
+      "same_total_cost": true,
+      "kruskal_time_ms": 0.3578,
+      "prim_time_ms": 0.4714,
+      "kruskal_operations": 275,
+      "prim_operations": 61,
+      "total_cost": 534
+    }
+  ]
+}

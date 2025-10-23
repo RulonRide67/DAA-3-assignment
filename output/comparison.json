@@ -4,8 +4,8 @@
   "same_total_cost": true,
   "kruskal_total_cost": 17,
   "prim_total_cost": 17,
-  "kruskal_time_ms": 1.0683,
-  "prim_time_ms": 1.6023,
+  "kruskal_time_ms": 0.8805,
+  "prim_time_ms": 1.452,
   "kruskal_operations": 18,
   "prim_operations": 6,
   "faster_algorithm": "Kruskal"
