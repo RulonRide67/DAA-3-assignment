@@ -1,0 +1,30 @@
+{
+  "algorithm": "Kruskal",
+  "vertices": 5,
+  "edges_in_mst": 4,
+  "total_cost": 17,
+  "operations": 18,
+  "execution_time_ms": 1.7287,
+  "mst_edges": [
+    {
+      "src": 2,
+      "dest": 4,
+      "weight": 2
+    },
+    {
+      "src": 1,
+      "dest": 2,
+      "weight": 3
+    },
+    {
+      "src": 0,
+      "dest": 2,
+      "weight": 5
+    },
+    {
+      "src": 1,
+      "dest": 3,
+      "weight": 7
+    }
+  ]
+}
