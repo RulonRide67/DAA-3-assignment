@@ -4,7 +4,7 @@
   "edges_in_mst": 4,
   "total_cost": 17,
   "operations": 18,
-  "execution_time_ms": 0.0617,
+  "execution_time_ms": 1.913,
   "mst_edges": [
     {
       "src": 2,
