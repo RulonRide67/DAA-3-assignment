@@ -1,0 +1,30 @@
+{
+  "algorithm": "Prim",
+  "vertices": 5,
+  "edges_in_mst": 4,
+  "total_cost": 17,
+  "operations": 6,
+  "execution_time_ms": 2.2562,
+  "mst_edges": [
+    {
+      "src": 0,
+      "dest": 2,
+      "weight": 5
+    },
+    {
+      "src": 2,
+      "dest": 4,
+      "weight": 2
+    },
+    {
+      "src": 2,
+      "dest": 1,
+      "weight": 3
+    },
+    {
+      "src": 1,
+      "dest": 3,
+      "weight": 7
+    }
+  ]
+}

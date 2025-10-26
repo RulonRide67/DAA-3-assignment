@@ -16,7 +16,6 @@
     </properties>
 
     <dependencies>
-        <!-- ✅ JUnit 5 для тестов -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
@@ -24,7 +23,6 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- ✅ Gson для работы с JSON -->
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
@@ -34,7 +32,6 @@
 
     <build>
         <plugins>
-            <!-- ✅ Плагин для запуска тестов -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>

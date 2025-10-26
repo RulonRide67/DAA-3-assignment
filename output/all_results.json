@@ -1,0 +1,22 @@
+{
+  "results": [
+    {
+      "vertices": 6,
+      "edges": 8,
+      "kruskal_time_ms": 0.08235714285714285,
+      "prim_time_ms": 0.10727142857142856
+    },
+    {
+      "vertices": 12,
+      "edges": 25,
+      "kruskal_time_ms": 0.16534285714285712,
+      "prim_time_ms": 0.2426142857142857
+    },
+    {
+      "vertices": 25,
+      "edges": 60,
+      "kruskal_time_ms": 0.2505,
+      "prim_time_ms": 0.3365285714285714
+    }
+  ]
+}
