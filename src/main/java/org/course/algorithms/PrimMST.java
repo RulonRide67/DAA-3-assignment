@@ -1,73 +1,73 @@
 package org.course.algorithms;
 
-import org.course.model.Edge;
 import org.course.model.Graph;
+import org.course.model.Edge;
+
 import java.util.*;
 
 public class PrimMST {
 
-    // Вспомогательный класс для хранения рёбер в куче
     static class Node implements Comparable<Node> {
-        int vertex;
-        int weight;
-        int parent;
-
-        Node(int vertex, int weight, int parent) {
-            this.vertex = vertex;
-            this.weight = weight;
-            this.parent = parent;
-        }
-
-        @Override
-        public int compareTo(Node o) {
-            return Integer.compare(this.weight, o.weight);
-        }
+        int vertex, weight;
+        Node(int v, int w) { vertex = v; weight = w; }
+        public int compareTo(Node o) { return this.weight - o.weight; }
     }
 
     public static Map<String, Object> findMST(Graph graph) {
-        long startTime = System.nanoTime();
+        long start = System.nanoTime();
 
         int V = graph.getVertices();
-        List<Edge> allEdges = graph.getEdges();
+        boolean[] visited = new boolean[V];
+        int[] key = new int[V];
+        int[] parent = new int[V];
+        Arrays.fill(key, Integer.MAX_VALUE);
+        Arrays.fill(parent, -1);
 
-        // создаём список смежности
-        List<List<Edge>> adj = new ArrayList<>();
-        for (int i = 0; i < V; i++) adj.add(new ArrayList<>());
-        for (Edge e : allEdges) {
-            adj.get(e.src).add(e);
-            adj.get(e.dest).add(new Edge(e.dest, e.src, e.weight));
+        key[0] = 0;
+
+        Map<Integer, List<Edge>> adj = new HashMap<>();
+        for (Edge e : graph.getEdges()) {
+            adj.computeIfAbsent(e.getSrc(), k -> new ArrayList<>()).add(e);
+            adj.computeIfAbsent(e.getDest(), k -> new ArrayList<>())
+                    .add(new Edge(e.getDest(), e.getSrc(), e.getWeight()));
         }
 
-        boolean[] inMST = new boolean[V];
         PriorityQueue<Node> pq = new PriorityQueue<>();
-        List<Edge> mstEdges = new ArrayList<>();
+        pq.add(new Node(0, 0));
 
-        int totalCost = 0;
         int operations = 0;
 
-        // начинаем с вершины 0
-        pq.offer(new Node(0, 0, -1));
-
         while (!pq.isEmpty()) {
-            Node current = pq.poll();
+            Node node = pq.poll();
+            int u = node.vertex;
+            if (visited[u]) continue;
+            visited[u] = true;
             operations++;
-            if (inMST[current.vertex]) continue;
 
-            inMST[current.vertex] = true;
-            if (current.parent != -1) {
-                mstEdges.add(new Edge(current.parent, current.vertex, current.weight));
-                totalCost += current.weight;
-            }
-
-            for (Edge edge : adj.get(current.vertex)) {
-                if (!inMST[edge.dest]) {
-                    pq.offer(new Node(edge.dest, edge.weight, current.vertex));
+            if (!adj.containsKey(u)) continue;
+            for (Edge e : adj.get(u)) {
+                int v = e.getDest();
+                int w = e.getWeight();
+                if (!visited[v] && w < key[v]) {
+                    key[v] = w;
+                    parent[v] = u;
+                    pq.add(new Node(v, key[v]));
                 }
             }
         }
 
-        long endTime = System.nanoTime();
-        double executionTimeMs = (endTime - startTime) / 1_000_000.0;
+        List<Edge> mstEdges = new ArrayList<>();
+        int totalCost = 0;
+        for (int i = 1; i < V; i++) {
+            if (parent[i] != -1) {
+                Edge e = new Edge(parent[i], i, key[i]);
+                mstEdges.add(e);
+                totalCost += key[i];
+            }
+        }
+
+        long end = System.nanoTime();
+        double timeMs = (end - start) / 1_000_000.0;
 
         Map<String, Object> result = new LinkedHashMap<>();
         result.put("algorithm", "Prim");
@@ -75,17 +75,17 @@ public class PrimMST {
         result.put("edges_in_mst", mstEdges.size());
         result.put("total_cost", totalCost);
         result.put("operations", operations);
-        result.put("execution_time_ms", executionTimeMs);
+        result.put("execution_time_ms", timeMs);
 
-        List<Map<String, Object>> edgeList = new ArrayList<>();
+        List<Map<String, Object>> mstEdgeList = new ArrayList<>();
         for (Edge e : mstEdges) {
-            Map<String, Object> edgeMap = new LinkedHashMap<>();
-            edgeMap.put("src", e.src);
-            edgeMap.put("dest", e.dest);
-            edgeMap.put("weight", e.weight);
-            edgeList.add(edgeMap);
+            Map<String, Object> edgeData = new LinkedHashMap<>();
+            edgeData.put("src", e.getSrc());
+            edgeData.put("dest", e.getDest());
+            edgeData.put("weight", e.getWeight());
+            mstEdgeList.add(edgeData);
         }
-        result.put("mst_edges", edgeList);
+        result.put("mst_edges", mstEdgeList);
 
         return result;
     }

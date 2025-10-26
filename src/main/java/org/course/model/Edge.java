@@ -20,4 +20,17 @@ public class Edge implements Comparable<Edge> {
     public String toString() {
         return String.format("(%d - %d : %d)", src, dest, weight);
     }
+
+    public int getSrc() {
+        return src;
+    }
+    
+
+    public int getDest() {
+        return dest;
+    }
+
+    public int getWeight() {
+        return weight;
+    }
 }

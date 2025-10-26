@@ -3,12 +3,13 @@ package org.course.util;
 import org.course.model.Graph;
 import org.course.algorithms.KruskalMST;
 import org.course.algorithms.PrimMST;
+
 import java.io.IOException;
 import java.util.*;
 
 public class GraphGenerator {
 
-    private static final int RUNS = 7; // the number of runs algorithms
+    private static final int RUNS = 10;
 
     public static Graph generateGraph(int vertices, int edgeCount, int maxWeight) {
         Graph g = new Graph(vertices);
@@ -34,46 +35,59 @@ public class GraphGenerator {
         PrimMST.findMST(g);
     }
 
-    private static double measureAlgorithm(String algorithm, Graph g) {
-        double total = 0;
+    private static Map<String, Double> measureAlgorithm(String algorithm, Graph g) {
+        double totalTime = 0;
+        double totalCost = 0;
+        double totalOps = 0;
+
         for (int i = 0; i < RUNS; i++) {
+            Graph graphCopy = generateGraph(g.getVertices(), g.getEdges().size(), 100);
             long start = System.nanoTime();
 
-            if (algorithm.equalsIgnoreCase("kruskal")) {
-                KruskalMST.findMST(g);
-            } else {
-                PrimMST.findMST(g);
-            }
+            Map<String, Object> result = algorithm.equalsIgnoreCase("kruskal")
+                    ? KruskalMST.findMST(graphCopy)
+                    : PrimMST.findMST(graphCopy);
 
             long end = System.nanoTime();
-            total += (end - start);
+            totalTime += (end - start);
+            totalCost += ((Number) result.get("total_cost")).doubleValue();
+            totalOps += ((Number) result.get("operations")).doubleValue();
         }
-        return (total / RUNS) / 1_000_000.0; // среднее в миллисекундах
+
+        Map<String, Double> stats = new HashMap<>();
+        stats.put("avg_time", (totalTime / RUNS) / 1_000_000.0);
+        stats.put("avg_cost", totalCost / RUNS);
+        stats.put("avg_ops", totalOps / RUNS);
+        return stats;
     }
 
     public static void main(String[] args) throws IOException {
         warmUp();
 
         List<Map<String, Object>> results = new ArrayList<>();
-
         int[][] configs = {
-                {6, 8, 20},    // small
-                {12, 25, 50},  // medium
-                {25, 60, 100}  // large
+                {6, 8, 20},
+                {12, 25, 50},
+                {25, 60, 100}
         };
 
         for (int[] cfg : configs) {
             int v = cfg[0], e = cfg[1], w = cfg[2];
-            Graph g = generateGraph(v, e, w);
+            Graph base = generateGraph(v, e, w);
 
-            double timeKruskal = measureAlgorithm("kruskal", g);
-            double timePrim = measureAlgorithm("prim", g);
+            Map<String, Double> kruskal = measureAlgorithm("kruskal", base);
+            Map<String, Double> prim = measureAlgorithm("prim", base);
 
             Map<String, Object> entry = new LinkedHashMap<>();
             entry.put("vertices", v);
             entry.put("edges", e);
-            entry.put("kruskal_time_ms", timeKruskal);
-            entry.put("prim_time_ms", timePrim);
+            entry.put("kruskal_time_ms", kruskal.get("avg_time"));
+            entry.put("prim_time_ms", prim.get("avg_time"));
+            entry.put("kruskal_cost", kruskal.get("avg_cost"));
+            entry.put("prim_cost", prim.get("avg_cost"));
+            entry.put("kruskal_operations", kruskal.get("avg_ops"));
+            entry.put("prim_operations", prim.get("avg_ops"));
+            entry.put("same_total_cost", Math.abs(kruskal.get("avg_cost") - prim.get("avg_cost")) < 0.001);
             results.add(entry);
         }
 
@@ -81,6 +95,6 @@ public class GraphGenerator {
         output.put("results", results);
         JSONWriter.writeMSTResult("output/all_results.json", output);
 
-        System.out.println("✅ Timing data saved to output/all_results.json");
+        System.out.println("✅ Full performance metrics saved to output/all_results.json");
     }
 }
